@@ -1,5 +1,6 @@
-var app = require('./app');
+var http = require('http');
+var app = require('./config/express');
 
-require('http').createServer(app).listen(app.get('port'), function () {
-    console.log('Express (' + app.get('env') + ') server listening on port ' + app.get('port'));
+http.createServer(app).listen(app.get('port'), function(){
+   console.log('Starting in port ' +   app.get('port')); 
 });
