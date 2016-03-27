@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Bem-vindo</title>
-    </head>
-    <body>
-        <h1>Bem-vindo ao Express</h1>
-    </body>    
+<html lang="pt-br" ng-app="contatooh">
+
+<head>
+    <meta name="viewport" content="width=device-width">
+    <meta charset="UTF-8">
+    <title>Contatooh</title>
+    <link rel="stylesheet" href="../vendor/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../vendor/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="../vendor/sweetalert/dist/sweetalert.css">
+</head>
+
+<body ng-controller="ContatoController" class="container">
+    <div ng-view/>
+    
+
+    <script src="../vendor/jquery/dist/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../vendor/angular/angular.min.js"></script>
+    <script src="../vendor/angular-route/angular-route.min.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/controllers/contato-controller.js"></script>
+    <script src="../vendor/sweetalert/dist/sweetalert.min.js"></script>    
+    
+</body>
+
 </html>
