@@ -1,6 +1,9 @@
 app.controller('ContatoController', function($scope, $routeParams) {
+    
+    var messageFactory = new MessageFactory();
+    
     $scope.total = 0;
-
+    
     $scope.increment = function() {
         $scope.total++;
     };
@@ -17,10 +20,8 @@ app.controller('ContatoController', function($scope, $routeParams) {
 
 
     $scope.removerContato = function(index) {
-            
-        var message = new Message();
-        
-        message.Confirm(function(){
+                                   
+        messageFactory.createConfirmRemoveContact(function(){
                 $scope.$apply(function() {
                 $scope.contatos.splice(index, 1)                
             });    
@@ -35,30 +36,3 @@ app.controller('ContatoController', function($scope, $routeParams) {
 
 });
 
-function Message() {
-
-    this.Confirm = function(callback) {
-        swal({
-            title: "Remoção de contato",
-            text: "Deseja realmente remover o contato!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Sim!",
-            cancelButtonText: "Cancelar",
-            closeOnConfirm: false,
-            html: false
-        }, function() {
-            swal("Removido!"
-                , "Seu contato foi removido com sucesso!."
-                , "success");
-
-            callback.call();
-
-
-
-        });
-
-    }
-
-}
