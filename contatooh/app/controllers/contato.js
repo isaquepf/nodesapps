@@ -8,8 +8,34 @@ module.exports = function() {
                     nome : 'Dirlaine',
                     email : 'dirlaineprestes@gmail.com'
                 }];
-  
+  var key = 2;
   var controller = {};
+
+  controller.salvarContato = function(req, res) {
+    
+       var contato = req.body;
+       contato = contato._id ? atualizar(contato) 
+                             : adicionar(contato);                             
+       res.json(contato);                                                       
+  };
+
+  function adicionar(contato) {
+      contato._id = ++key;      
+      contatos.push(contato);
+      return contato;       
+  }
+  
+  function atualizar(contatoNovo) {
+      
+        contatos = contatos.map(function(contato) {
+            if(contato._id == contatoNovo._id){
+                contato = contatoNovo;
+            }
+            return contato;
+        });
+        return contatoNovo;       
+  }
+
   
   controller.listaContatos = function(req, res) {
       res.json(contatos);

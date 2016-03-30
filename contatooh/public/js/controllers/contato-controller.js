@@ -4,8 +4,9 @@ app.controller('ContatoController', function($scope, $http, $routeParams, contat
 
     $scope.total = 0;
     $scope.filtro = '';
-    $scope.mensagem = { texto : ''};
-    
+    $scope.mensagem = { texto: '' };
+    $scope.contato = {};
+
     $scope.init = function() {
         buscaContatos();
     };
@@ -16,25 +17,42 @@ app.controller('ContatoController', function($scope, $http, $routeParams, contat
         contatoService.query(function(contatos) {
             $scope.contatos = contatos;
         }, function(error) {
-            $scope.mensagem.texto = 'Não foi possivel obter a lista de contatos: ' + error;             
+            $scope.mensagem.texto = 'Não foi possivel obter a lista de contatos: ' + error;
         });
+    };
+
+    if ($routeParams.contatoId) {
+        contatoService.get({ id: $routeParams.contatoId }
+            , function(contato) {
+                $scope.contato = contato;
+            }
+            , function(error) {
+                $scope.mensagem.texto = 'Não foi possivel obter o contatos: ' + error;
+            });
+    } else {
+        $scope.contato = new contatoService();
     }
 
-    $scope.removerContato = function(index) {
+    $scope.removerContato = function(contato) {
         messageFactory.createConfirmRemoveContact(function() {
             $scope.$apply(function() {
                 var promisse = contatoService.delete({ id: contato._id },
                     buscaContatos,
                     function(error) {
-                        $scope.mensagem.texto = 'Não foi possivel remover o contato. ' + error;                        
+                        $scope.mensagem.texto = 'Não foi possivel remover o contato. ' + error;
                     });
             });
         });
     };
 
     $scope.adicionarContato = function(contato) {
-        $scope.contatos.push(contato);
-        sweetAlert('Eba!', 'Contato ' + contato.nome + ' salvo com sucesso!', 'success');
+        $scope.contato.$save()
+        .then(function(){
+            $scope.mensagem = { texto : 'Salvo com sucesso'};
+            $scope.contato = {};
+        }).catch(function(error){
+            $scope.mensagem = { texto : 'Não foi possível gravar o contato.'};
+        });        
     };
 });
 
