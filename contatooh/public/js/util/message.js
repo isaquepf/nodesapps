@@ -18,5 +18,10 @@ function MessageFactory() {
 
             callback.call();
         });
-    }
+    };
+    
+    this.callInformationAddMessage = function() {
+        swal("Muito bom!", "Contato adicionado com sucesso!", "success")
+    };
+    
 }

@@ -46,13 +46,23 @@ app.controller('ContatoController', function($scope, $http, $routeParams, contat
     };
 
     $scope.adicionarContato = function(contato) {
+        $scope.submitForm();
+
         $scope.contato.$save()
-        .then(function(){
-            $scope.mensagem = { texto : 'Salvo com sucesso'};
-            $scope.contato = {};
-        }).catch(function(error){
-            $scope.mensagem = { texto : 'Não foi possível gravar o contato.'};
-        });        
+            .then(function() {
+                messageFactory.callInformationAddMessage();
+                window.location = '/#/contatos';
+                $scope.mensagem = { texto: 'Salvo com sucesso' };
+                $scope.contato = {};
+            }).catch(function(error) {
+                $scope.mensagem = { texto: 'Não foi possível gravar o contato.' };
+            });
     };
+
+    $scope.submitForm = function() {
+        if ($scope.contatoForm.$invalid) {
+            $scope.contatoForm.$setSubmitted();
+        }
+    };;
 });
 

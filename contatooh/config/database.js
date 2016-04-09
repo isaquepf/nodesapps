@@ -3,9 +3,9 @@ var connection;
 
 module.exports = function(uri) {
 
-    if (!connection) {
-        connection = mongoose.createConnection(uri);
-    }
+    mongoose.connect(uri, { server: { poolSize: 15 } });
+        
+    mongoose.set('debug', true);
 
     mongoose.connection.on('connected', function() {
         console.log('Mongoose! Conectado em ' + uri);
@@ -17,6 +17,13 @@ module.exports = function(uri) {
 
     mongoose.connection.on('error', function(erro) {
         console.log('Mongoose! Erro na conexão ' + erro);
+    });
+
+    process.on('SIGINT', function() {
+        mongoose.connection.close(function() {
+            console.log('Mongoose! Desconectado pelo término da aplicação');
+            process.exit(0);
+        });
     });
 
     return connection;

@@ -1,22 +1,65 @@
+<style>
+    .input-group-addon {
+        color: green;
+        background-color: #ffffff;
+    }
+    
+    .emergency {
+        color: darkred;
+        background-color: #ffffff;
+    }
+       
+</style>
+
 <h1 class="text-center">Contato</h1>
 <p ng-show="mensagem.texto">
     {{mensagem.texto}}
 </p>
 <form name="contatoForm">
+
     <div class="form-group">
-        <label for="name">Nome Completo</label>
-        <input id="nome" name="nome" type="text" class="form-control" required ng-model="contato.nome">
-        <p ng-show="contatoForm.nome.$invalid && !contatoForm.nome.$pristine" class="help-block">O campo nome é obrigatório.</p>
-    </div>
-    <div class="form-group">
-        <label for="email">E-mail</label>
+        <label for="name" class="control-label">
+            Nome Completo
+        </label>
         <div class="input-group">
-            <span class="input-input-group-addon">@</span>
-            <input id="email" name="email" type="email" class="form-control" required ng-model="contato.email">
-            <p ng-show="contatoForm.email.$invalid && !contatoForm.email.$pristine" class="help-block">O campo e-mail é obrigatório.</p>
+            <div class="input-group-addon">
+                <span class="glyphicon glyphicon-user"></span>
+            </div>
+            <input id="nome" name="nome" type="text" class="form-control" required ng-model="contato.nome">
+            <p ng-show="contatoForm.email.$invalid && !contatoForm.email.$pristine" ng-class="{'has-error': contatoForm.nome.$invalid && !contatoForm.nome.$pristine && submitted}">O campo nome é obrigatório.</p>
         </div>
     </div>
-    <div>
+
+    <div class="form-group">
+        <label for="email" class="control-label">
+            E-mail
+        </label>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <span class="glyphicon glyphicon-envelope"></span>
+            </div>
+            <input class="form-control" id="email" name="email" type="email" required ng-model="contato.email" />
+            <p ng-show="contatoForm.email.$invalid && !contatoForm.email.$pristine" ng-class="{'has-error': contatoForm.email.$invalid && !contatoForm.email.$pristine && submitted}">O campo e-mail é obrigatório.</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="emergencia" class="control-label">
+            Emergência
+        </label>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <span class="glyphicon glyphicon-plus-sign emergency"></span>
+            </div>
+            <select id="emergencia" class="form-control" ng-model="contato.emergencia" ng-options="contato._id as contato.nome for contato in contatos">
+           </select>
+        </div>
+    </div>
+
+
+    <br/>
+    <div class="btn-btn-group-justified">
         <button type="submit" class="btn btn-primary" ng-disabled="contatoForm.$invalid " ng-click="adicionarContato()">Salvar</button>
         <a href="#/" class="btn btn-default">Voltar</a>
+    </div>
 </form>

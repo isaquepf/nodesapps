@@ -1,68 +1,70 @@
-module.exports = function() {
-  
-  var contatos = [{_id : 1,
-                    nome : 'Isaque',
-                    email : 'isaquepf@gmail.com'
-                  },
-                  {_id : 2,
-                    nome : 'Dirlaine',
-                    email : 'dirlaineprestes@gmail.com'
-                }];
-  var key = 2;
-  var controller = {};
+module.exports = function(app) {
 
-  controller.salvarContato = function(req, res) {
-    
-       var contato = req.body;
-       contato = contato._id ? atualizar(contato) 
-                             : adicionar(contato);                             
-       res.json(contato);                                                       
-  };
+    var controller = {};
 
-  function adicionar(contato) {
-      contato._id = ++key;      
-      contatos.push(contato);
-      return contato;       
-  }
-  
-  function atualizar(contatoNovo) {
-      
-        contatos = contatos.map(function(contato) {
-            if(contato._id == contatoNovo._id){
-                contato = contatoNovo;
-            }
-            return contato;
-        });
-        return contatoNovo;       
-  }
+    var Contato = app.models.contato;
 
-  
-  controller.listaContatos = function(req, res) {
-      res.json(contatos);
-  };
-  
-  controller.obtemContato = function(req, res) {
-      
-    var id = req.params.id;
-    
-    var contato = contato.filter(function(){
-       return contato._id == id; 
-    })[0];
-    
-    contato ? res.json(contato) 
-            : res.status(404).send('Contato não encontrado');  
-      
-  };
-    
-  controller.removeContato = function(req, res) {
-    var id = req.params.id;
-    contatos = contatos.filter(function(contato){
-       return contato._id != id; 
-    });
-    
-    res.status(204).end();      
-  };
-    
-  return controller;
+    controller.listaContatos = function(req, res) {
+        Contato.find().populate('emergencia').exec()
+            .then(function(contatos) {
+                res.json(contatos);
+            }, function(erro) {
+                console.error(erro);
+                res.status(500).json(erro);
+            });
+    };
+
+    controller.obtemContato = function(req, res) {
+
+        var id = req.params.id;
+
+        Contato.findById(id).exec()
+            .then(
+            function(contato) {
+                if (!contato) {
+                    throw new Error("Contato não encontrado.");
+                }
+                res.json(contato);
+            },
+            function(erro) {
+                console.log(erro);
+                res.status(404).json(erro);
+            });
+    };
+
+    controller.removeContato = function(req, res) {
+        var id = req.params.id;
+
+        Contato.remove({ '_id': id }).exec()
+            .then(function() {
+                res.status(204).end();
+            }, function(erro) {
+                return console.log(erro);
+            });
+    };
+
+    controller.salvarContato = function(req, res) {
+        var id = req.body._id;
+        req.body.emergencia = req.body.emergencia || null;
+        
+        
+        if (id) {
+            Contato.findByIdAndUpdate(id, req.body).exec().then(function(contato) {
+                res.json(contato);
+            }, function(erro) {
+                console.error(erro);
+                res.status(500).json(erro);
+            });
+        } else {
+            Contato.create(req.body).then(function(contato) {
+                res.status(201).json(contato);
+            }, function(erro) {
+                console.log(erro);
+                res.status(500).json(erro);
+            })
+        }
+    };
+
+    return controller;
 };
 
