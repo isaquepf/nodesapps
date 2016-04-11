@@ -1,5 +1,5 @@
-var mongoose = require('mongoose')
-    , findOrCreate = require('mongoose-findorcreate');
+var mongoose = require('mongoose');
+var findOrCreate = require('mongoose-findorcreate');
 
 module.exports = function() {
     

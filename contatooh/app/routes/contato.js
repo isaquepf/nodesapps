@@ -1,7 +1,4 @@
 
-
-
-
 module.exports = function(app) {
 
     function verificaAutenticacao(req, res, next) {

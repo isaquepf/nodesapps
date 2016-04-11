@@ -46,8 +46,8 @@ module.exports = function(app) {
     controller.salvarContato = function(req, res) {
         var id = req.body._id;
         req.body.emergencia = req.body.emergencia || null;
-        
-        
+
+
         if (id) {
             Contato.findByIdAndUpdate(id, req.body).exec().then(function(contato) {
                 res.json(contato);

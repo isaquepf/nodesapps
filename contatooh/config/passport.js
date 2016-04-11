@@ -3,7 +3,7 @@ var passport = require('passport'),
     mongoose = require('mongoose');
 
 module.exports = function() {
-    var Usuario = mongoose.model('usuario');
+    var Usuario = mongoose.model('Usuario');
 
     passport.use(new gitHubStrategy({
         clientID: '396042ffe8cb8f30051a',
