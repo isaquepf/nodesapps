@@ -1,64 +1,70 @@
-module.exports = function(app) {
+var sanitize = require('mongo-sanitize');
+
+module.exports = function (app) {
 
     var controller = {};
 
     var Contato = app.models.contato;
 
-    controller.listaContatos = function(req, res) {
+    controller.listaContatos = function (req, res) {
         Contato.find().populate('emergencia').exec()
-            .then(function(contatos) {
+            .then(function (contatos) {
                 res.json(contatos);
-            }, function(erro) {
+            }, function (erro) {
                 console.error(erro);
                 res.status(500).json(erro);
             });
     };
 
-    controller.obtemContato = function(req, res) {
+    controller.obtemContato = function (req, res) {
 
         var id = req.params.id;
 
         Contato.findById(id).exec()
             .then(
-            function(contato) {
+            function (contato) {
                 if (!contato) {
                     throw new Error("Contato não encontrado.");
                 }
                 res.json(contato);
             },
-            function(erro) {
+            function (erro) {
                 console.log(erro);
                 res.status(404).json(erro);
             });
     };
 
-    controller.removeContato = function(req, res) {
-        var id = req.params.id;
+    controller.removeContato = function (req, res) {
+        var id = sanitize(req.params.id);
 
         Contato.remove({ '_id': id }).exec()
-            .then(function() {
+            .then(function () {
                 res.status(204).end();
-            }, function(erro) {
+            }, function (erro) {
                 return console.log(erro);
             });
     };
 
-    controller.salvarContato = function(req, res) {
+    controller.salvarContato = function (req, res) {
         var id = req.body._id;
-        req.body.emergencia = req.body.emergencia || null;
 
+        var contatoRQ = {
+            "nome": req.body.nome,
+            "email": req.body.email,
+            "emergencia": req.body.emergencia || null
+        };
 
         if (id) {
-            Contato.findByIdAndUpdate(id, req.body).exec().then(function(contato) {
+            Contato.findByIdAndUpdate(id, contatoRQ).exec().then(function (contato) {
                 res.json(contato);
-            }, function(erro) {
+            }, function (erro) {
                 console.error(erro);
                 res.status(500).json(erro);
             });
         } else {
-            Contato.create(req.body).then(function(contato) {
+            Contato.create(contatoRQ).then(function (contato) {
                 res.status(201).json(contato);
-            }, function(erro) {
+            }, function (erro) {
                 console.log(erro);
                 res.status(500).json(erro);
             })

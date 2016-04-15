@@ -4,7 +4,8 @@ var express = require('express')
     , bodyParser = require('body-parser')
     , cookieParser = require('cookie-parser')
     , session = require('express-session')
-    , passport = require('passport');
+    , passport = require('passport')
+    , helmet = require('helmet');
 
 module.exports = function() {
 
@@ -21,6 +22,12 @@ module.exports = function() {
     app.use(session({ secret: 'isaquepf', resave: true, saveUninitialized:true }));
     app.use(passport.initialize());
     app.use(passport.session());
+    app.use(helmet.xssFilter());
+    app.disable('x-powered-by');
+    app.use(helmet.hidePoweredBy({setTo : 'Netuno 1.8'}));
+    app.use(helmet());
+    app.use(helmet.xframe());
+    app.use(helmet.nosniff());
 
     load('models', { cwd: 'app' })
         .then('controllers')
