@@ -7,7 +7,7 @@ var express = require('express')
     , passport = require('passport')
     , helmet = require('helmet');
 
-module.exports = function() {
+module.exports = function () {
 
     var app = express();
 
@@ -15,24 +15,27 @@ module.exports = function() {
     app.use(express.static('./public'));
     app.set('view engine', 'ejs');
     app.set('views', './app/views');
-
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.use(cookieParser());
-    app.use(session({ secret: 'isaquepf', resave: true, saveUninitialized:true }));
+    app.use(session({ secret: 'isaquepf', resave: true, saveUninitialized: true }));
     app.use(passport.initialize());
     app.use(passport.session());
+    app.use(helmet());
     app.use(helmet.xssFilter());
     app.disable('x-powered-by');
-    app.use(helmet.hidePoweredBy({setTo : 'Netuno 1.8'}));
-    app.use(helmet());
     app.use(helmet.xframe());
     app.use(helmet.nosniff());
 
     load('models', { cwd: 'app' })
         .then('controllers')
+        .then('routes/auth.js')
         .then('routes')
         .into(app);
+
+    app.get('*', function (req, res) {
+        res.status(404).render('404');
+    })
 
     return app;
 };

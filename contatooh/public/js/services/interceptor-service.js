@@ -7,6 +7,5 @@ app.factory('InterceptorService', function($location, $q) {
             return $q.reject(resposta);
         }
     };
-
     return interceptor;
 });

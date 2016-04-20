@@ -11,17 +11,19 @@
 </head>
 
 <body ng-controller="ContatoController" class="container">      
-    <%if (usuarioLogado.lenght > 0) { %>
-    <div class="text-right">
-        <p> Logado como:
-            <span id="usuario-logado">
-        <%=usuarioLogado %>
-    </span>
-    <a href="/logout">Logout</a>
-        </p>
-    </div>    
+    <%if (usuarioLogado != 'undefined') { %>
+        <div class="text-right">
+            <p> Logado como:
+                <span id="usuario-logado">
+            <%=usuarioLogado %>
+        </span>
+        <a href="/logout">Logout</a>
+            </p>
+        </div>    
     <% } %>
-
+    
+   <div ng-view></div>
+      
     <!--libs-->
     <script src="../vendor/jquery/dist/jquery.min.js"></script>
     <script src="../vendor/bootstrap/dist/js/bootstrap.min.js"></script>

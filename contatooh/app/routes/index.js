@@ -6,10 +6,5 @@ module.exports = function(app) {
             login = req.user.login;
         }
         res.render('index', { "usuarioLogado" : login });
-    });
-    
-    app.get('/logout', function(req, res){
-        req.logOut();
-        res.redirect('/');        
-    });
+    });          
 };
